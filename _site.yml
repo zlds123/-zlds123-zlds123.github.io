@@ -3,10 +3,30 @@ name: "my-website"
 navbar:
   title: "My Website"
   left:
-    - text: "Home"
+    - text: "Homepage"
       href: index.html
     - text: "About"
       href: about.html
+    - text: "Topics"
+      menu:
+      - text: "Homework 5 static"
+        menu:
+        - text: "Problem 1"
+          href: anly503-fall2020-a5-zlds123/anly503_hw5_1.html
+        - text: "Problem 2"
+          href: anly503-fall2020-a5-zlds123/anly503_hw5_2.html
+        - text: "Problem 3"
+          href: anly503-fall2020-a5-zlds123/anly503_hw5_3.html
+        - text: "Problem 4"
+          href: anly503-fall2020-a5-zlds123/anly503_hw5_4.html
+        - text: "Problem 5"
+          href: anly503-fall2020-a5-zlds123/anly503_hw5_5.html
+      - text: "Homework 6 geospatial"
+        href: anly503-fall2020-a6-zlds123/geospatial.html
+      - text: "Homework 6 choropleth"
+        href: anly503-fall2020-a6-zlds123/choropleth.html
+      - text: "Homework 7 network"
+        href: anly503-fall2020-a7-zlds123/networks.html
 output:
   html_document:
     theme: cosmo
