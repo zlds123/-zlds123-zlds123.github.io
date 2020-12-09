@@ -1,0 +1,51 @@
+---
+title: "ANLY503_HW5_1"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Homework 5: Static Visualizations
+*Zhiyu Lin, zl281@georgetown.edu*
+
+### 1. Explore all accounts
+
+```{r}
+accounts <- read.csv("data/accounts_analytical.csv")
+transactions <- read.csv("data/transactions.csv")
+```
+
+
+```{r}
+library(dplyr)
+library(tidyverse)
+mean_balance <- merge(x = transactions, y = accounts, by = "account_id", all.x = TRUE) %>%
+  select(c(account_id, balance)) %>%
+  group_by(account_id) %>%
+  summarise(mean_balance = mean(balance))
+n_cards <- ifelse(is.na(accounts$credit_cards), 0, 1)
+mean_balance$`Whether Account Has Credit Cards` <- as.factor(n_cards)
+loan_binary <- ifelse(is.na(accounts$loan_amount), 0, 1)
+mean_balance$`Whether Account Has Loan` <- as.factor(loan_binary)
+```
+
+
+```{r}
+library(ggplot2)
+library(ggridges)
+
+mean_balance$combined_categories <- as.factor(ifelse(mean_balance$`Whether Account Has Credit Cards` == 1, ifelse(mean_balance$`Whether Account Has Loan` == 1, "yes_credit_yes_loan", "yes_credit_no_loan"), ifelse(mean_balance$`Whether Account Has Loan` == 1, "no_credit_yes_loan", "no_credit_no_loan")))
+
+ggplot(mean_balance, 
+       aes(x = mean_balance, 
+           y = combined_categories, 
+           fill = combined_categories)) +
+  geom_density_ridges() + 
+  theme_ridges() +
+  labs("Highway mileage by auto class") +
+  theme(legend.position = "none")
+```
+
+All types of accounts are left skewed. Accounts with no credit cards but with loans have a higher average balance compared to the other types of accounts. 

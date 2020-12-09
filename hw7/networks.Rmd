@@ -1,0 +1,94 @@
+---
+title: "ANLY503 HW7 Zhiyu Lin"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(readxl)
+data = read_excel("data/State_to_State_Migrations_Table_2018.xls")
+```
+
+```{r}
+# clean the data into source-target matrix
+data2 = data[5:nrow(data), c(1,8:ncol(data))]
+names = as.character(unlist(data2[2,]))
+names[1] = "Current residence in"
+colnames(data2) <- names
+data2 = data2[-2, ]
+data3 = subset(data2, `Current residence in` %in% c("New York", "Texas", "Minnesota", "District of Columbia"))
+data4 = data3[, c(1, 4:ncol(data3))]
+data_matrix = data4[ , -which(names(data4) %in% c(NA))]
+head(data_matrix)
+```
+
+```{r}
+# get edge list
+long_data = gather(data_matrix, target, count, Alabama:`Foreign Country`, factor_key=TRUE)
+colnames(long_data) = c("source", "target", "count")
+long_data$count = as.numeric(as.character(long_data$count))
+data_ready = long_data %>%
+  filter(count > 0) %>%
+  filter(!target %in% c("Total", "Puerto Rico", "Foreign Country", "U.S. Island Area") )
+
+data_ready$target = as.character(data_ready$target)
+head(data_ready)
+```
+
+```{r}
+# get node list
+nodes = as.data.frame(union(data_ready$source, data_ready$target))
+colnames(nodes) = c("state")
+```
+
+```{r}
+# get state center locations
+library(datasets)
+states = as.data.frame(cbind(datasets::state.name, datasets::state.center$x, datasets::state.center$y))
+colnames(states) = c("name", "long", "lat")
+dc<-data.frame("District of Columbia", "-77.0369", "38.9072")
+names(dc)<-c("name","long", "lat")
+states = rbind(states, dc)
+nodes2 = merge(nodes, states, by.x = "state", by.y = "name", all.x = TRUE)
+nodes2$lat = as.numeric(as.character(nodes2$lat))
+nodes2$long = as.numeric(as.character(nodes2$long))
+head(nodes2)
+```
+
+```{r}
+# get edge color palette
+col.1 <- adjustcolor("orange red", alpha=0.7)
+col.2 <- adjustcolor("orange", alpha=0.7)
+edge.pal <- colorRampPalette(c(col.1, col.2), alpha = TRUE)
+edge.col <- edge.pal(100)
+```
+
+```{r}
+library(maps)
+library(geosphere)
+# plot the network on the map
+
+map("state", col="grey20", fill=TRUE, bg="black", lwd=0.1)
+title("US State-Level Population Migration in the year of 2018", col.main = "white")
+points(x=nodes2$long, y=nodes2$lat, pch=19, col=ifelse(!nodes2$state %in% c("New York", "Texas", "Minnesota", "District of Columbia"), "lightblue", "orange"), cex = ifelse(!nodes2$state %in% c("New York", "Texas", "Minnesota", "District of Columbia"), 1.85, 2.5))
+legend(x = min(nodes2$long) - 5 ,y = min(nodes2$lat) - 5, 95, legend=c("NY, TX, MN, DC", "Others"), col=c("orange", "lightblue"), lty=1:2, cex=0.8)
+
+for(i in 1:nrow(data_ready)) {
+node1 <- nodes2[nodes2$state == data_ready[i,]$source,]
+node2 <- nodes2[nodes2$state == data_ready[i,]$target,]
+
+arc <- gcIntermediate( c(node1[1,]$long, node1[1,]$lat),
+                       c(node2[1,]$long, node2[1,]$lat), 
+                       n=1000, addStartEnd=TRUE )
+edge.ind <- round(120*data_ready[i,]$count / max(data_ready$count))
+lines(arc, col=edge.col[edge.ind], lwd=edge.ind/10)
+}
+legend("bottomleft", legend=c(c("NY, TX, MN, DC"), "Others"), col=c("orange", "lightblue"), lty=1:2, lwd = 15, cex=0.8, bg='white')
+```
+
+
+

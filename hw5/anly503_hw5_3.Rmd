@@ -1,0 +1,91 @@
+---
+title: "ANLY503_HW5_3"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Homework 5: Static Visualizations
+*Zhiyu Lin, zl281@georgetown.edu*
+
+### 3. Account time and loan defaults
+
+```{r}
+library(lubridate)
+library(dplyr)
+library(ggplot2)
+library(tidyverse)
+accounts <- read.csv("data/accounts_analytical.csv")
+transactions <- read.csv("data/transactions.csv")
+temp <- accounts[,c(names(accounts)[grepl( "loan" , names(accounts))], "acct_creation_date")] 
+temp <- na.omit(temp)
+
+temp$time_diff <- mapply(function(y,x) difftime(strptime(x, '%Y-%m-%d'), strptime(y, '%Y-%m-%d'), units='days'), temp$acct_creation_date, temp$loan_date)
+temp$loan_date_date <- as.vector(apply(as.matrix(temp$loan_date), 1, function(x) strptime(x, "%Y-%m-%d")))
+temp$account_date_date <- as.vector(apply(as.matrix(temp$acct_creation_date), 1, function(x) strptime(x, "%Y-%m-%d")))
+temp$loan_default <- ifelse(temp$loan_default == TRUE, 1, 0)
+temp$loan_status <- ifelse(temp$loan_status == "expired", 0, 1)
+```
+
+```{r}
+library(ggplot2)
+library(ggcorrplot)
+
+num_temp <- temp %>% select_if(is.numeric)
+r <- cor(num_temp, use="complete.obs")
+ggcorrplot(r)
+```
+
+This visualization shows the correlation between every pair of loan related parameter. We observe that loan payment have a high correlation with debit_bank_transfer_loan_payment_avg_txn. 
+
+```{r}
+b <- c(-Inf, as.numeric(summary(temp$loan_amount)[2]), as.numeric(summary(temp$loan_amount)[3]), as.numeric(summary(temp$loan_amount)[5]), Inf)
+names <- c("q1", "q2", "q3", "q4")
+temp$loan_amount_cat <- cut(temp$loan_amount, breaks = b, labels = names)
+```
+
+```{r}
+library(survival)
+library(survminer)
+sfit <- survfit(Surv(time_diff, loan_default) ~ loan_amount_cat , data=temp)
+ggsurvplot(sfit, 
+           conf.int=TRUE, 
+           pval=TRUE,
+           legend.labs=c("q1", "q2", "q3", "q4"), 
+           legend.title="loan status",  
+           palette=c("cornflowerblue", "indianred3", "orange", "darkgreen"), 
+           title="Kaplan-Meier Curve for loan default survival",
+           xlab = "Time (days)")
+```
+
+We see that loans with larger amounts are more likely to default over time.
+
+```{r}
+sfit <- survfit(Surv(time_diff, loan_default) ~ loan_status , data=temp)
+ggsurvplot(sfit, 
+           conf.int=TRUE, 
+           pval=TRUE,
+           legend.labs=c("expired", "current"), 
+           legend.title="loan status",  
+           palette=c("cornflowerblue", "indianred3"), 
+           title="Kaplan-Meier Curve for loan default survival",
+           xlab = "Time (days)")
+```
+
+Current loans not paid off until after 650 days are significantly more likely to default than others.
+
+```{r}
+sfit <- survfit(Surv(time_diff, loan_default) ~ as.factor(loan_term) , data=temp)
+ggsurvplot(sfit, 
+           conf.int=FALSE, 
+           pval=TRUE,
+           legend.labs=c("24", "12", "60", "36", "48"), 
+           legend.title="loan status",  
+           palette=c("cornflowerblue", "indianred3", "orange", "darkgreen", "navy"), 
+           title="Kaplan-Meier Curve for loan default survival",
+           xlab = "Time (days)")
+```
+
+Loan with more than 60 months payment terms are very likely to default after 650 days compared to the others.

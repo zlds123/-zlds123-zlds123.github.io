@@ -1,0 +1,82 @@
+---
+title: "anly503_hw5"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup}
+library(reticulate)
+conda_create("r-reticulate") # I created a new conda environment
+conda_install("r-reticulate", "scipy") # and I installed all python libraries I need.
+conda_install("r-reticulate", "pandas")
+conda_install("r-reticulate", "seaborn")
+conda_install("r-reticulate", "numpy")
+conda_install("r-reticulate", "pandas")
+conda_install("r-reticulate", "matplotlib")
+use_condaenv("r-reticulate")
+py_module_available('pandas')
+```
+
+```{python, echo=T, eval=T}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+accounts = pd.read_csv("data/accounts_analytical.csv")
+transactions = pd.read_csv("data/transactions.csv")
+bin_credit_card = accounts['credit_cards'].apply(lambda x: int(0) if np.isnan(x) else int(1))
+bin_credit = pd.DataFrame(bin_credit_card).reset_index()
+bin_credit.columns = ['account_id', 'credit_cards']
+transaction_counts = pd.DataFrame(transactions['account_id'].value_counts()).reset_index()
+transaction_counts.columns = ['account_id', 'count']
+transaction_counts['transactions'] = transaction_counts['count'].apply(lambda x: int(1) if x > 0 else int(0))
+newdf = bin_credit.merge(transaction_counts, 'left', 'account_id')
+newdf.fillna(0, inplace=True)
+newdf['transactions'] = newdf['transactions'].apply(lambda x: int(x))
+aggregated = pd.crosstab(newdf['credit_cards'], newdf['transactions'])
+
+plt.figure(figsize=(10,10))
+sns.heatmap(
+    aggregated,
+    cmap='BuPu',
+    linewidth=1,
+    annot=True
+)
+plt.show()
+```
+
+This plot shows for the number of accounts that do and do not have credit transactions and the number of accounts that do and do not have credit cards associated. We observe that there are 63 accounts with credit cards but don't have any credit card transactions.
+
+```{python, echo=T, eval=T}
+def get_matrix(two_cols):
+    a = two_cols.iloc[:,0]
+    b = two_cols.iloc[:,1]
+    outer = []
+    for i in a:
+        inner = []
+        for j in b:
+            if (i == 0) & (j != 0):
+                inner.append(1)
+            elif (i != 0) & (j == 0):
+                inner.append(0)
+            else:
+                inner.append(2)
+        outer.append(inner)
+    return pd.DataFrame(outer)
+
+result = get_matrix(newdf[['credit_cards', 'count']])
+
+plt.figure(figsize=(10,10))
+sns.heatmap(
+    result,
+    cmap='BuPu',
+    linewidth=0.0001)
+plt.title("Account credit cards and credit card transactions")
+plt.xlabel("credit cards")
+plt.ylabel("credit card transactions")
+plt.show()
+```
+
+This plot shows a heatmap for all of the accounts. Accounts that don't have credit cards but do have transactions are labeled zero so corresponds to color white in the plot. Accounts that do have credit cards but don't have any transactions are labeled 1 so corresponds to light blue in the plot. We can easily observe that accounts in the 4000ish range (upper right corner) stand out.

@@ -1,0 +1,71 @@
+---
+title: "ANLY503_HW5_4"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Homework 5: Static Visualizations
+*Zhiyu Lin, zl281@georgetown.edu*
+
+### 4. Behaviors of accounts
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(tidyverse)
+accounts <- read.csv("data/accounts_analytical.csv")
+transactions <- read.csv("data/transactions.csv")
+n_transactions <- merge(x = accounts, y = transactions, by = "account_id", all.x = TRUE) %>%
+  group_by(account_id) %>%
+  summarise(num_transactions = n())
+```
+
+```{r}
+n_transactions$account_id[which.max(n_transactions$num_transactions)]
+```
+
+```{r}
+highest <- transactions %>% filter(account_id == 8261)
+```
+
+```{r}
+highest %>%
+  select(c("date", "amount", "balance")) %>%
+  gather(variable, value, -one_of("date")) %>%
+  mutate(time = as.POSIXct(date, format = "%Y-%m-%d")) %>%
+  select(-date) %>%
+  ggplot(aes(x = time, y = value, group = variable, color=variable)) +
+  geom_line() +
+  theme(axis.text.x = element_text(hjust = 1)) + 
+  facet_wrap(~ variable, ncol = 1)
+```
+
+This visualization compares the amount and the balance in the account over time. We see that there is seasonal variation in both graphs. Amount is more stable compared to balance. 
+
+```{r}
+highest[is.na(highest$method)] <- "other"
+highest %>%
+  select(c("date", "amount", "balance", "type", "method")) %>%
+  mutate(time = as.POSIXct(date, format = "%Y-%m-%d")) %>%
+  select(-date) %>%
+  ggplot(aes(x = time, y = balance, color = type)) +
+  geom_line() +
+  facet_wrap(~method)
+```
+
+This visualization shows the credit and debit transactions for each transaction category: bank transfer, cash and others. We see that credit transactions are higher than debit transactions for bank transfers. There is a little bit of credit transactions in 1994 for cash transfer then it stopped. Debit transactions go up and down quick drastically and the low point is around early 1996. There is only credit transaction in the "other" category.
+
+```{r}
+highest %>%
+  select(c("date", "amount", "balance", "type", "method")) %>%
+  mutate(time = as.POSIXct(date, format = "%Y-%m-%d")) %>%
+  select(-date) %>%
+  ggplot(aes(x = time, y = amount, color = type)) +
+  geom_line() +
+  facet_wrap(~method)
+```
+
+This graph shows the two types of transactions: credit and debit for the three types of transactions over time. We see that this account probably set up auto-payment for credit cards and it is getting seasonal debit transaction that took a down turn in late 1995. Cash transactions are a lot more variational compared to bank transfers. This account is primarily doing cash debit transactions compared to cash credit. 

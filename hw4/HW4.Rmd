@@ -1,0 +1,173 @@
+---
+title: "HW4"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Task 1
+
+```{r}
+library(magrittr) 
+library(dplyr) 
+library(tidyverse)
+library(reshape)
+```
+
+```{r}
+loans = read.csv('./data/loans.csv')
+head(loans)
+```
+
+```{r}
+non_status_fields = c('id', 'account_id', 'date', 'amount', 'payments')
+status_fields = setdiff(colnames(loans), non_status_fields)
+```
+
+```{r}
+binary_status_fields = loans %>% select(status_fields)
+binary_status_fields
+```
+
+```{r}
+new_binary <- binary_status_fields %>% 
+  mutate_all(funs(str_replace(., "X", "1"))) %>%
+  mutate_all(funs(str_replace(., "-", "0")))
+
+
+```
+
+```{r}
+
+loans2 <- cbind(loans %>% select(non_status_fields), as.data.frame(sapply(new_binary, as.numeric)) )
+loans3 <- melt(loans2, id = non_status_fields) %>% filter(value == 1)
+loans3
+```
+
+```{r}
+loans4 <- loans3 %>%
+  separate(variable, c("term", "status"), "_") %>%
+  separate(term, c("todrop", "term"), "X") 
+loans4$active_status <- ifelse(loans4$status %in% c("A", "B") , "expired", "current")
+loans4$payment <- ifelse(loans4$status %in% c("B", "D"), "default", ifelse(loans4$status == "A", "full", "in_progress"))
+loans4 %>% select(c(non_status_fields, "term", "active_status", "payment"))
+```
+
+## Task 2
+
+```{r}
+districts2
+```
+
+```{r}
+districts <- read.csv("data/districts.csv")
+
+districts2 <- districts %>%
+  separate(municipality_info, c("num_municipality_with_population_<500", "num_municipality_with_population_500-1999", "num_municipality_with_population_2000-9999", "num_municipality_with_population_>10000"), ",") 
+districts2$`num_municipality_with_population_<500` <- as.numeric(str_sub(districts2$`num_municipality_with_population_<500`, start=2))
+districts2$`num_municipality_with_population_>10000` <- as.numeric(str_sub(districts2$`num_municipality_with_population_>10000`, end=1))
+
+districts3 <- districts2 %>%
+  separate(unemployment_rate, c("unemployment_rate_95", "unemployment_rate_96"), ",")
+districts3$unemployment_rate_95 <- as.numeric(str_sub(districts3$unemployment_rate_95, start=2))
+districts3$unemployment_rate_96 <- as.numeric(str_sub(districts3$unemployment_rate_96, end=-2))
+
+districts4 <- districts3 %>%
+  separate(commited_crimes, c("crime_rate_95", "crime_rate_96"), ",")
+districts4$crime_rate_95 <- as.numeric(str_sub(districts4$crime_rate_95, start=2))
+districts4$crime_rate_96 <- as.numeric(str_sub(districts4$crime_rate_96, end=-2))
+districts4$`num_municipality_with_population_500-1999` <- as.numeric(districts4$`num_municipality_with_population_500-1999`)
+districts4$`num_municipality_with_population_2000-9999` <- as.numeric(districts4$`num_municipality_with_population_2000-9999`)
+districts4
+```
+
+## Task 3
+
+```{r}
+districts
+account
+```
+```{r}
+account <- read.csv("data/accounts.csv")
+districts <- read.csv("data/districts.csv")
+links <- read.csv("data/links.csv")
+cards <- read.csv("data/cards.csv")
+combined1 <- merge(account, districts, all.x=TRUE, by.x = "district_id", by.y = "id")
+library(data.table)
+setnames(combined1, "id", "account_id")
+setnames(combined1, "name", "district_name")
+setnames(combined1, "date", "open_date")
+combined1
+```
+
+```{r}
+combined3 <- merge(cards, links, all.y=TRUE, by.x = "link_id", by.y = "id")
+setnames(combined3, "id", "card_id")
+setnames(combined3, "type.x", "card_type")
+setnames(combined3, "issue_date", "card_issue_date")
+setnames(combined3, "type.y", "customer_type")
+
+card_account <- combined3 %>%
+  group_by(account_id) %>%
+  summarise(count = n())
+
+links_account <- links %>%
+  group_by(account_id) %>%
+  summarise(num_customers = n())
+
+combined2 <- merge(combined1, links_account, all.x=TRUE, by.x = "account_id", by.y = "account_id")
+combined2
+```
+
+```{r}
+combined4 <- merge(combined2, card_account, all.x=TRUE, by.x='account_id', by.y='account_id')
+setnames(combined4, "count", "credit_cards")
+combined4
+```
+
+```{r}
+combined5 <- merge(combined4, loans4, by.x='account_id', by.y='account_id', all.x =TRUE)
+setnames(combined5, "id", "loan")
+combined5$loan <- ifelse(is.na(combined5$loan), FALSE, TRUE)
+setnames(combined5, "amount", "loan_amount")
+setnames(combined5, "payments", "loan_payments")
+setnames(combined5, "term", "loan_term")
+setnames(combined5, "active_status", "loan_status")
+combined5$loan_default <- ifelse((combined5$payment) == "default", TRUE, ifelse(combined5$payment %in% c("full", "in_progress"), FALSE, NA))
+combined5
+```
+```{r}
+transactions <- read.csv("data/transactions.csv")
+max_withdrawal <- transactions %>% group_by(account_id) %>% summarize(max = max(amount))
+min_withdrawal <- transactions %>% group_by(account_id) %>% summarize(min = min(amount))
+```
+
+```{r}
+combined6 <- merge(combined5, max_withdrawal, by.x='account_id', by.y='account_id', all.x=TRUE)
+combined7 <- merge(combined6, min_withdrawal, by.x='account_id', by.y='account_id', all.x=TRUE)
+setnames(combined7, "max", "max_withdrawal")
+setnames(combined7, "min", "min_withdrawal")
+```
+
+```{r}
+payment_orders = read.csv("data/payment_orders.csv")
+payment_counts = payment_orders %>% group_by(account_id) %>% summarize(cc_payments = n())
+combined8 <- merge(combined7, payment_counts, by.x='account_id', by.y='account_id',all.X=TRUE)
+combined8
+```
+
+```{r}
+max_balance <- transactions %>% group_by(account_id) %>% summarize(max_balance = max(balance))
+min_balance <- transactions %>% group_by(account_id) %>% summarize(min_balance = min(balance))
+combined9 <- merge(combined8, max_balance, all.x=TRUE, by.x='account_id', by.y='account_id')
+combined9 <- merge(combined9, min_balance, all.x=TRUE, by.x='account_id', by.y='account_id')
+combined9
+```
+```{r}
+final_df <- combined9 %>% select(c('account_id', 'district_name', 'open_date', 'statement_frequency', 'num_customers', 'credit_cards', 'loan', 'loan_amount', 'loan_payments', 'loan_term', 'loan_status', 'loan_default', 'max_withdrawal', 'min_withdrawal', 'cc_payments', 'max_balance', 'min_balance'))
+final_df$loan_term <- as.numeric(final_df$loan_term)
+final_df
+```
+

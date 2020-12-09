@@ -1,0 +1,36 @@
+---
+title: "ANLY503_HW5_2"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Homework 5: Static Visualizations
+*Zhiyu Lin, zl281@georgetown.edu*
+
+### 2. Distribution of all loans
+
+```{r}
+accounts <- read.csv("data/accounts_analytical.csv")
+transactions <- read.csv("data/transactions.csv")
+loans <- accounts[, grepl( "loan" , names(accounts))]
+loans <- na.omit(loans)
+```
+
+
+```{r}
+library(caret)
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+loans %>% 
+  select(c("loan_amount", "loan_payment", "loan_term", "debit_bank_transfer_loan_payment_txn_ct", "debit_bank_transfer_loan_payment_txn_tot", "debit_bank_transfer_loan_payment_avg_txn", "loan_default")) %>%
+  gather(key = "variable", value = "value", -one_of("loan_default")) %>%
+  ggplot(aes(x = value, color=loan_default)) +
+    geom_density() +
+    facet_wrap(~variable, scales = 'free') 
+```
+
+This visualization shows default and non-default loans for all the numerical variables regarding loans. We can see that loan amounts are left-skewed whereas loan term are more uniformally distribured. 
