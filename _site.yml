@@ -3,10 +3,32 @@ name: "my-website"
 navbar:
   title: "My Website"
   left:
-    - text: "Home"
+    - text: "Homepage"
       href: index.html
     - text: "About"
       href: about.html
+    - text: "Topics"
+      menu:
+      - text: "Homework 5 static"
+        menu:
+        - text: "Problem 1"
+          href: hw5/anly503_hw5_1.html
+        - text: "Problem 2"
+          href: hw5/anly503_hw5_2.html
+        - text: "Problem 3"
+          href: hw5/anly503_hw5_3.html
+        - text: "Problem 4"
+          href: hw5/anly503_hw5_4.html
+        - text: "Problem 5"
+          href: hw5/anly503_hw5_5.html
+      - text: "Homework 6 geospatial"
+        menu:
+        - text: "geospatial"
+          href: hw6/geospatial.html
+        - text: "Homework 6 choropleth"
+          href: hw6/choropleth.html
+      - text: "Homework 7 network"
+        href: hw7/networks.html
 output:
   html_document:
     theme: cosmo
