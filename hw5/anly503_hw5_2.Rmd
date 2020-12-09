@@ -1,26 +1,21 @@
 ---
-title: "ANLY503_HW5_2"
+title: "Distribution of loans"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='last'}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Homework 5: Static Visualizations
-*Zhiyu Lin, zl281@georgetown.edu*
-
-### 2. Distribution of all loans
-
-```{r}
-accounts <- read.csv("data/accounts_analytical.csv")
-transactions <- read.csv("data/transactions.csv")
+```{r, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='last'}
+accounts <- read.csv("/Users/zhiyulin/anly503/fall2020/anly503-fall2020-a5-zlds123/data/accounts_analytical.csv")
+transactions <- read.csv("/Users/zhiyulin/anly503/fall2020/anly503-fall2020-a5-zlds123/data/transactions.csv")
 loans <- accounts[, grepl( "loan" , names(accounts))]
 loans <- na.omit(loans)
 ```
 
 
-```{r}
+```{r, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='last'}
 library(caret)
 library(tidyverse)
 library(ggplot2)

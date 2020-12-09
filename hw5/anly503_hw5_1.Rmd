@@ -1,24 +1,20 @@
 ---
-title: "ANLY503_HW5_1"
+title: "Explore all accounts"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='last'}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Homework 5: Static Visualizations
-*Zhiyu Lin, zl281@georgetown.edu*
 
-### 1. Explore all accounts
-
-```{r}
-accounts <- read.csv("data/accounts_analytical.csv")
-transactions <- read.csv("data/transactions.csv")
+```{r, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='last'}
+accounts <- read.csv("/Users/zhiyulin/anly503/fall2020/anly503-fall2020-a5-zlds123/data/accounts_analytical.csv")
+transactions <- read.csv("/Users/zhiyulin/anly503/fall2020/anly503-fall2020-a5-zlds123/data/transactions.csv")
 ```
 
 
-```{r}
+```{r, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='last'}
 library(dplyr)
 library(tidyverse)
 mean_balance <- merge(x = transactions, y = accounts, by = "account_id", all.x = TRUE) %>%
@@ -32,7 +28,7 @@ mean_balance$`Whether Account Has Loan` <- as.factor(loan_binary)
 ```
 
 
-```{r}
+```{r, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='last'}
 library(ggplot2)
 library(ggridges)
 

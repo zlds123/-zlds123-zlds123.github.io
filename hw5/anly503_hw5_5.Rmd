@@ -1,11 +1,11 @@
 ---
-title: "anly503_hw5"
+title: "Suspicious Transactions"
 output:
   html_document: default
   pdf_document: default
 ---
 
-```{r setup}
+```{r setup, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='last'}
 library(reticulate)
 conda_create("r-reticulate") # I created a new conda environment
 conda_install("r-reticulate", "scipy") # and I installed all python libraries I need.
@@ -18,14 +18,14 @@ use_condaenv("r-reticulate")
 py_module_available('pandas')
 ```
 
-```{python, echo=T, eval=T}
+```{python, eval=T, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='last'}
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-accounts = pd.read_csv("data/accounts_analytical.csv")
-transactions = pd.read_csv("data/transactions.csv")
+accounts = pd.read_csv("/Users/zhiyulin/anly503/fall2020/anly503-fall2020-a5-zlds123/data/accounts_analytical.csv")
+transactions = pd.read_csv("/Users/zhiyulin/anly503/fall2020/anly503-fall2020-a5-zlds123/data/transactions.csv")
 bin_credit_card = accounts['credit_cards'].apply(lambda x: int(0) if np.isnan(x) else int(1))
 bin_credit = pd.DataFrame(bin_credit_card).reset_index()
 bin_credit.columns = ['account_id', 'credit_cards']
@@ -42,14 +42,15 @@ sns.heatmap(
     aggregated,
     cmap='BuPu',
     linewidth=1,
-    annot=True
+    annot=True,
+    fmt='g'
 )
 plt.show()
 ```
 
 This plot shows for the number of accounts that do and do not have credit transactions and the number of accounts that do and do not have credit cards associated. We observe that there are 63 accounts with credit cards but don't have any credit card transactions.
 
-```{python, echo=T, eval=T}
+```{python, eval=T, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='last'}
 def get_matrix(two_cols):
     a = two_cols.iloc[:,0]
     b = two_cols.iloc[:,1]

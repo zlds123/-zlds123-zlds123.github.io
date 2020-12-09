@@ -1,37 +1,34 @@
 ---
-title: "ANLY503_HW5_4"
+title: "Behaviors of accounts"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='last'}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Homework 5: Static Visualizations
-*Zhiyu Lin, zl281@georgetown.edu*
 
-### 4. Behaviors of accounts
-
-```{r}
+```{r, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='last'}
 library(dplyr)
 library(ggplot2)
 library(tidyverse)
-accounts <- read.csv("data/accounts_analytical.csv")
-transactions <- read.csv("data/transactions.csv")
+accounts <- read.csv("/Users/zhiyulin/anly503/fall2020/anly503-fall2020-a5-zlds123/data/accounts_analytical.csv")
+transactions <- read.csv("/Users/zhiyulin/anly503/fall2020/anly503-fall2020-a5-zlds123/data/transactions.csv")
 n_transactions <- merge(x = accounts, y = transactions, by = "account_id", all.x = TRUE) %>%
   group_by(account_id) %>%
   summarise(num_transactions = n())
 ```
 
-```{r}
+```{r, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='last'}
 n_transactions$account_id[which.max(n_transactions$num_transactions)]
 ```
 
-```{r}
+```{r, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='last'}
 highest <- transactions %>% filter(account_id == 8261)
 ```
 
-```{r}
+#### Amount and balance over time
+```{r, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='last'}
 highest %>%
   select(c("date", "amount", "balance")) %>%
   gather(variable, value, -one_of("date")) %>%
@@ -45,7 +42,8 @@ highest %>%
 
 This visualization compares the amount and the balance in the account over time. We see that there is seasonal variation in both graphs. Amount is more stable compared to balance. 
 
-```{r}
+#### Credit and debit balance by transaction type
+```{r, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='last'}
 highest[is.na(highest$method)] <- "other"
 highest %>%
   select(c("date", "amount", "balance", "type", "method")) %>%
@@ -58,7 +56,8 @@ highest %>%
 
 This visualization shows the credit and debit transactions for each transaction category: bank transfer, cash and others. We see that credit transactions are higher than debit transactions for bank transfers. There is a little bit of credit transactions in 1994 for cash transfer then it stopped. Debit transactions go up and down quick drastically and the low point is around early 1996. There is only credit transaction in the "other" category.
 
-```{r}
+#### Credit and debit amount by transaction type
+```{r, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='last'}
 highest %>%
   select(c("date", "amount", "balance", "type", "method")) %>%
   mutate(time = as.POSIXct(date, format = "%Y-%m-%d")) %>%

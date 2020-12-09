@@ -1,19 +1,19 @@
 ---
-title: "ANLY503 HW7 Zhiyu Lin"
+title: "State to State Migrations 2018"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='all'}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
+```{r, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='all'}
 library(tidyverse)
 library(readxl)
-data = read_excel("data/State_to_State_Migrations_Table_2018.xls")
+data = read_excel("/Users/zhiyulin/anly503/fall2020/anly503-fall2020-a7-zlds123/data/State_to_State_Migrations_Table_2018.xls")
 ```
 
-```{r}
+```{r, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='all'}
 # clean the data into source-target matrix
 data2 = data[5:nrow(data), c(1,8:ncol(data))]
 names = as.character(unlist(data2[2,]))
@@ -26,7 +26,7 @@ data_matrix = data4[ , -which(names(data4) %in% c(NA))]
 head(data_matrix)
 ```
 
-```{r}
+```{r, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='all'}
 # get edge list
 long_data = gather(data_matrix, target, count, Alabama:`Foreign Country`, factor_key=TRUE)
 colnames(long_data) = c("source", "target", "count")
@@ -39,13 +39,13 @@ data_ready$target = as.character(data_ready$target)
 head(data_ready)
 ```
 
-```{r}
+```{r, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='all'}
 # get node list
 nodes = as.data.frame(union(data_ready$source, data_ready$target))
 colnames(nodes) = c("state")
 ```
 
-```{r}
+```{r, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE,results='hide',fig.keep='all'}
 # get state center locations
 library(datasets)
 states = as.data.frame(cbind(datasets::state.name, datasets::state.center$x, datasets::state.center$y))
@@ -59,7 +59,7 @@ nodes2$long = as.numeric(as.character(nodes2$long))
 head(nodes2)
 ```
 
-```{r}
+```{r, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='all'}
 # get edge color palette
 col.1 <- adjustcolor("orange red", alpha=0.7)
 col.2 <- adjustcolor("orange", alpha=0.7)
@@ -67,7 +67,7 @@ edge.pal <- colorRampPalette(c(col.1, col.2), alpha = TRUE)
 edge.col <- edge.pal(100)
 ```
 
-```{r}
+```{r, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='last'}
 library(maps)
 library(geosphere)
 # plot the network on the map
