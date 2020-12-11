@@ -30,7 +30,7 @@ navbar:
       - text: "Homework 7 network"
         href: hw7/networks.html
     - text: "Final Project (flexdashboard)"
-      href: dashboard.html
+      href: test_flex.html
 output:
   html_document:
     theme: cosmo

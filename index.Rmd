@@ -1,23 +1,27 @@
 ---
-title: "My homepage"
+title: "Zhiyu's Data Visualization Portfolio"
 ---
- 
-## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+## **Zhiyu Lin**
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+**Data Scientist | Machine Learning Engineer | Data Story Teller**
 
-```{r cars}
-summary(cars)
-```
+*MS Candidate in Data Science and Analytics* ***@Georgetown Universityn***
+*Machine Learning Ops Engineer* ***@Novelis***
 
-## Including Plots
+zhiyu.lin18@gmail.com
+zl281@georgetown.edu
 
-You can also embed plots, for example:
+![](profile_pic.JPG)
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+Hello, welcome to my data visualization portfolio. 
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+* I am a highly motivated data scientist with 1 year of experience and a Master’s degree in progress. I am skilled at
+  +  Collecting, analyzing and interpreting large volumes of data
+  +  Designing and implementing innovative solutions for complex business and research problems
+  +  Extracting patterns from noisy data and communicating findings to a diverse audience.
+
+* I am a critical thinker and I especially love tackling machine learning, natural language processing and statistical computing problems. Take a look at my past projects below!
+
+Actively seeking for full-time positions starting after May 2021.
+

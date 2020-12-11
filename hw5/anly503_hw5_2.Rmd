@@ -1,5 +1,5 @@
 ---
-title: "Distribution of loans"
+title: "What kind of loans default?"
 output: html_document
 ---
 

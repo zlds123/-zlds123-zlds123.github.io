@@ -3,29 +3,34 @@ title: "How did Covid hit different parts of the world?"
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows
+    vertical_layout: fill
 ---
+
 <style>                     
 .navbar {
-  background-color:black;
-  border-color:white;
-  color: white;
+  background-color:crimson;
+  border-color:black;
 }
 .navbar-brand {
 color:black!important;
 }
-</style>                    
 
 
-```{r setup, include=FALSE, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='last'}
-library(flexdashboard)
-```
+</style>   
+
+
+Page 1
+=====================================  
+
+How did Covid hit different parts of the world? The visualizations below give you the story. 
 
 Row {data-height=650}
 -----------------------------------------------------------------------
 
-### Covid is growing exponentially in the US, India and Brazil.
+### Covid is growing exponentially in the US, India and Brazil
 
 ```{r, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='last'}
+library(flexdashboard)
 library(readr)
 library(dplyr)
 library(reshape2)
@@ -34,10 +39,7 @@ library(ggplot2)
 library(maps)
 library(ggthemes)
 library(gganimate)
-```
 
-
-```{r, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='last'}
 covid = read_csv("/Users/zhiyulin/Desktop/final_project/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv")
 covid_df = melt(covid, id.vars = c("Province/State", "Country/Region", "Lat", "Long"))
 covid_df$variable <- mdy(covid_df$variable)
@@ -67,8 +69,7 @@ ggplot() +
    scale_y_continuous(labels=fancy_scientific)
 ```
 
-
-### China has flattened the curve. France and the US are getting sick faster than recovering.
+### China has flattened the curve. France and the US are getting sick faster than recovering
 
 ```{r, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='last'}
 covid2 = read_csv("/Users/zhiyulin/Desktop/final_project/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv")
@@ -113,9 +114,10 @@ ggplot(exp_all_2, aes(Date, Cases)) +
   theme_minimal()
 ```
 
-### Think they are not that different? Let's unify the scales. 
 
-```{r, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='last'}
+### Think these countries are hit similarly? Let's unify the scales
+
+```{r}
 ggplot(exp_all_2, aes(Date, Cases)) +
   geom_line(size=1, aes(color=category)) +
   facet_wrap(vars(Country), labeller = "label_both") +
@@ -123,11 +125,10 @@ ggplot(exp_all_2, aes(Date, Cases)) +
   theme_minimal()
 ```
 
-Row {data-height=350}
+Row {data-height=650}
 -----------------------------------------------------------------------
 
-### Covid spread, death and recovery timeline
-
+### Map
 ```{r, eval=FALSE, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='last'}
 # confirmed cases
 covid = read_csv("/Users/zhiyulin/Desktop/final_project/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv")
@@ -198,8 +199,24 @@ animate(map_frames_year, height = 300, width = 750)
 anim_save("combined_anim_time_wide_new.gif")
 ```
 
-![](dashboard_files/figure-html/unnamed-chunk-5-1.gif)
+![](unnamed-chunk-5-1.gif)
 
 
+### Word clouds
+```{r, echo=FALSE, eval=FALSE}
 
+```
 
+![](wordcloud_animation.gif)
+
+Page 2
+=====================================  
+
+Row {data-height=850}
+-----------------------------------------------------------------------
+
+### LDAvis
+```{r, set-options, echo=FALSE}
+options(width = 200)
+htmltools::includeHTML("lda.html")
+```

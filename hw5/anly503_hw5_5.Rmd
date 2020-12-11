@@ -1,10 +1,11 @@
 ---
-title: "Suspicious Transactions"
+title: "Are there suspicious transactions?"
 output:
   html_document: default
   pdf_document: default
 ---
 
+#### 63 accounts suspicious for having credit cards but no credict card transactions
 ```{r setup, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='last'}
 library(reticulate)
 conda_create("r-reticulate") # I created a new conda environment
@@ -49,6 +50,8 @@ plt.show()
 ```
 
 This plot shows for the number of accounts that do and do not have credit transactions and the number of accounts that do and do not have credit cards associated. We observe that there are 63 accounts with credit cards but don't have any credit card transactions.
+
+#### Which cards are they?
 
 ```{python, eval=T, echo=FALSE, warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='last'}
 def get_matrix(two_cols):
