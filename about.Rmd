@@ -10,10 +10,31 @@ This portfolio contains the data visualizations I've made while taking ANLY503 D
 
 The final project tells a story about the **$\color{crimson}{\text{Covid-19 development timeline in different countries}}$** around the world. 
 
-* The visualizations include 
-- regular tabular data
-- text data
-- network data
-- time series data. 
+The visualizations include 
+
+* regular EDA data
+* text data
+* network data
+* time series data
+* geographic data
 
 The programming languages include Python and R. Checkout the repository for source code: https://github.com/anly503/anly503-fall2020-project-zlds123
+
+**Data:**
+
+Data is collected through two sources:
+
+- https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series 
+
+- https://github.com/echen102/COVID-19-TweetIDs
+
+COVID-19 dataset contains covid confirmed cases, death and recovered cases statistics for different countries around the world and for the US states. This dataset is ultimately used for making the map animations and the line plots on the flex dashboard.
+
+COVID-19-TweetIDs contains tweet IDs related to the pandemic collected since mid January, and it's kept up to date till early December. I used Hydrator (https://github.com/DocNow/hydrator) and my Twitter Developer API to access the tweets through these tweet IDs. This dataset is then used to make the networks, word clouds animation, and the LDA topic modeling visualization.
+
+**Code:**
+
+Each of the visualizations on the flexdashboard is made individually first through the code in the `other_supporting_code` folder. They are then aggregated into the flexdashboard.Rmd file with comments, library imports and R/Python code separation. 
+
+Because how long it takes to knit some of these visualizations individually, it is impossible to knit everything in the flexdashboard.Rmd file all together. Therefore, for visualizations that take a long time to run, or for visualizations that require Python code, I have included the code chunks that would produce the result, set eval=FALSE, and embedded the output from before in the Rmd file directly.
+

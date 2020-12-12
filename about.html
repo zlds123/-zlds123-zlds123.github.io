@@ -338,14 +338,26 @@ $(document).ready(function () {
 
 <p>This portfolio contains the data visualizations I’ve made while taking ANLY503 Data Vis class at Georgetown in Fall 2020. It includes <strong>four coding assignments</strong> and a <strong>final project</strong>.</p>
 <p>The final project tells a story about the <strong><span class="math inline">\(\color{crimson}{\text{Covid-19 development timeline in different countries}}\)</span></strong> around the world.</p>
+<p>The visualizations include</p>
 <ul>
-<li>The visualizations include</li>
-<li>regular tabular data</li>
+<li>regular EDA data</li>
 <li>text data</li>
 <li>network data</li>
-<li>time series data.</li>
+<li>time series data</li>
+<li>geographic data</li>
 </ul>
 <p>The programming languages include Python and R. Checkout the repository for source code: <a href="https://github.com/anly503/anly503-fall2020-project-zlds123" class="uri">https://github.com/anly503/anly503-fall2020-project-zlds123</a></p>
+<p><strong>Data:</strong></p>
+<p>Data is collected through two sources:</p>
+<ul>
+<li><p><a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series" class="uri">https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series</a></p></li>
+<li><p><a href="https://github.com/echen102/COVID-19-TweetIDs" class="uri">https://github.com/echen102/COVID-19-TweetIDs</a></p></li>
+</ul>
+<p>COVID-19 dataset contains covid confirmed cases, death and recovered cases statistics for different countries around the world and for the US states. This dataset is ultimately used for making the map animations and the line plots on the flex dashboard.</p>
+<p>COVID-19-TweetIDs contains tweet IDs related to the pandemic collected since mid January, and it’s kept up to date till early December. I used Hydrator (<a href="https://github.com/DocNow/hydrator" class="uri">https://github.com/DocNow/hydrator</a>) and my Twitter Developer API to access the tweets through these tweet IDs. This dataset is then used to make the networks, word clouds animation, and the LDA topic modeling visualization.</p>
+<p><strong>Code:</strong></p>
+<p>Each of the visualizations on the flexdashboard is made individually first through the code in the <code>other_supporting_code</code> folder. They are then aggregated into the flexdashboard.Rmd file with comments, library imports and R/Python code separation.</p>
+<p>Because how long it takes to knit some of these visualizations individually, it is impossible to knit everything in the flexdashboard.Rmd file all together. Therefore, for visualizations that take a long time to run, or for visualizations that require Python code, I have included the code chunks that would produce the result, set eval=FALSE, and embedded the output from before in the Rmd file directly.</p>
 
 
 
