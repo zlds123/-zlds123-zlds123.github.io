@@ -7,8 +7,10 @@ navbar:
       href: index.html
     - text: "About"
       href: about.html
-    - text: "Topics"
+    - text: "Homework assignments"
       menu:
+      - text: "Homework 4 data wrangling"
+        href: hw4/HW4.html
       - text: "Homework 5 static"
         menu:
         - text: "Problem 1"
@@ -22,15 +24,11 @@ navbar:
         - text: "Problem 5"
           href: hw5/anly503_hw5_5.html
       - text: "Homework 6 geospatial"
-        menu:
-        - text: "geospatial"
-          href: hw6/geospatial.html
-        - text: "Homework 6 choropleth"
-          href: hw6/choropleth.html
+        href: hw6/geospatial.html
       - text: "Homework 7 network"
         href: hw7/networks.html
     - text: "Final Project (flexdashboard)"
-      href: test_flex.html
+      href: flexdashboard.html
 output:
   html_document:
     theme: cosmo

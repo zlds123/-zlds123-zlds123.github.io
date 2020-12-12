@@ -1,9 +1,19 @@
 ---
 title: "About this portfolio"
+output:
+  html_document:
+    css: style.css
 ---
 
 
-This portfolio contains the data visualizations I've made while taking ANLY503 Data Vis class at Georgetown in Fall 2020. It includes four coding assignments and a final project that shows a story about the Covid-19 development timeline in different countries. 
+This portfolio contains the data visualizations I've made while taking ANLY503 Data Vis class at Georgetown in Fall 2020. It includes **four coding assignments** and a **final project**. 
 
-The visualizations include regular tabular data, text data, network data, and time series data. The programming languages are Python and R. 
+The final project tells a story about the **$\color{crimson}{\text{Covid-19 development timeline in different countries}}$** around the world. 
 
+* The visualizations include 
+- regular tabular data
+- text data
+- network data
+- time series data. 
+
+The programming languages include Python and R. Checkout the repository for source code: https://github.com/anly503/anly503-fall2020-project-zlds123

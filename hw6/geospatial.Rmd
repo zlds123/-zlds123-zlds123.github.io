@@ -3,7 +3,7 @@ title: "ANLY503 HW6 Zhiyu Lin"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, eval=FALSE, echo=FALSE, warning=FALSE,message=FALSE, error=FALSE, results='hide',fig.keep='last'}
 #Sys.setenv(RETICULATE_PYTHON = "C:\\Users\\Perry\\Anaconda3\\envs\\r-reticulate")
 library(reticulate)
 #use_condaenv("r-reticulate")
@@ -38,14 +38,14 @@ py_module_available('plotly')
 ```
 
 
-```{python, echo=T, eval=T}
+```{python, eval=FALSE, echo=FALSE, warning=FALSE,message=FALSE, error=FALSE, results='hide',fig.keep='last'}
 import os
 sys.path.insert(1, "C:\\Users\\Perry\\anaconda3\\envs\\r-reticulate\\Lib\\site-packages")
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 ```
 
 
-```{r}
+```{r, echo=FALSE, warning=FALSE,message=FALSE, error=FALSE, results='hide',fig.keep='last'}
 library(reshape2)
 library(tidyverse)
 library(readxl)
@@ -55,16 +55,16 @@ library(grid)
 ```
 
 
-```{r}
+```{r, echo=FALSE, warning=FALSE,message=FALSE, error=FALSE, results='hide',fig.keep='last'}
 # Ingest data
 election <- read.csv("data/countypres_2000-2016.csv")
 unemployment <- read_excel("data/Unemployment.xls", skip=7)
-counties <- st_read("data/tl_2019_us_county-1/tl_2019_us_county.shp")
+counties <- st_read("/Users/zhiyulin/anly503/fall2020/anly503-fall2020-a6-zlds123/data/tl_2019_us_county-1/tl_2019_us_county.shp")
 ```
 
 ## Texas
 
-```{r}
+```{r, echo=FALSE, warning=FALSE,message=FALSE, error=FALSE, results='hide',fig.keep='last'}
 # Get the fips and geometry for Texas
 tx_shape <- counties %>%
   filter(STATEFP==48) %>% # texas
@@ -91,7 +91,7 @@ head(tx_county_fips)
 head(tx_unemployment)
 ```
 
-```{r}
+```{r, echo=FALSE, warning=FALSE,message=FALSE, error=FALSE, results='hide',fig.keep='last'}
 # Tidy the data and get it into the format ready for plotting
 tidy_tx <- election %>% 
   filter(year %in% c(2008, 2012, 2016)) %>%
@@ -110,7 +110,7 @@ tidy_tx <- melt(tidy_tx, id.vars = c("year", "county", "fips", "geometry"), vari
 head(tidy_tx)
 ```
 
-```{r}
+```{r, echo=FALSE, warning=FALSE,message=FALSE, error=FALSE, results='hide',fig.keep='last'}
 tx_facet_plot_1 <- 
   tidy_tx %>% 
   filter(type == "Democrat Support Rate") %>%
@@ -127,7 +127,7 @@ tx_facet_plot_1 <-
 ```
 
 
-```{r}
+```{r, echo=FALSE, warning=FALSE,message=FALSE, error=FALSE, results='hide',fig.keep='last'}
 tx_facet_plot_2 <- 
   tidy_tx %>% 
     filter(type == "Unemployment Rate") %>%
@@ -144,7 +144,7 @@ tx_facet_plot_2 <-
 ```
 
 
-```{r}
+```{r, echo=FALSE, warning=FALSE,message=FALSE, error=FALSE, results='hide',fig.keep='last'}
 grid.arrange(tx_facet_plot_1, 
              tx_facet_plot_2, 
              ncol=2,
@@ -154,7 +154,7 @@ grid.arrange(tx_facet_plot_1,
 
 ## California
 
-```{r}
+```{r, echo=FALSE, warning=FALSE,message=FALSE, error=FALSE, results='hide',fig.keep='last'}
 # Get the fips and geometry for Texas
 ca_shape <- counties %>%
   filter(STATEFP=="06") %>% # california
@@ -181,7 +181,7 @@ head(ca_county_fips)
 head(ca_unemployment)
 ```
 
-```{r}
+```{r, echo=FALSE, warning=FALSE,message=FALSE, error=FALSE, results='hide',fig.keep='last'}
 # Tidy the data and get it into the format ready for plotting
 tidy_ca <- election %>% 
   filter(year %in% c(2008, 2012, 2016)) %>%
@@ -200,7 +200,7 @@ tidy_ca <- melt(tidy_ca, id.vars = c("year", "county", "fips", "geometry"), vari
 head(tidy_ca)
 ```
 
-```{r}
+```{r, echo=FALSE, warning=FALSE,message=FALSE, error=FALSE, results='hide',fig.keep='last'}
 ca_facet_plot_1 <- 
   tidy_ca %>% 
   filter(type == "Democrat Support Rate") %>%
@@ -217,7 +217,7 @@ ca_facet_plot_1 <-
 ```
 
 
-```{r}
+```{r, echo=FALSE, warning=FALSE,message=FALSE, error=FALSE, results='hide',fig.keep='last'}
 ca_facet_plot_2 <- 
   tidy_ca %>% 
     filter(type == "Unemployment Rate") %>%
@@ -234,7 +234,7 @@ ca_facet_plot_2 <-
 ```
 
 
-```{r}
+```{r, echo=FALSE, warning=FALSE,message=FALSE, error=FALSE, results='hide',fig.keep='last'}
 grid.arrange(ca_facet_plot_1, 
              ca_facet_plot_2, 
              ncol=2,
@@ -244,7 +244,7 @@ grid.arrange(ca_facet_plot_1,
 
 ## Pennsylvania
 
-```{python, echo=T, eval=F, mappImage, screenshot.force = TRUE}
+```{python, echo=F, eval=F, mappImage, screenshot.force = TRUE, warning=FALSE,message=FALSE, error=FALSE, results='hide',fig.keep='last'}
 import pandas as pd
 import fiona
 from tabulate import tabulate
@@ -253,7 +253,7 @@ pd.options.display.max_columns = None
 
 election = pd.read_csv("data/countypres_2000-2016.csv")
 unemployment = pd.read_excel("data/Unemployment.xls",skiprows = range(7))
-counties = fiona.open("data/tl_2019_us_county-1/tl_2019_us_county.shp")
+counties = fiona.open("/Users/zhiyulin/anly503/fall2020/anly503-fall2020-a6-zlds123/data/tl_2019_us_county-1/tl_2019_us_county.shp")
 
 # Basic preparation
 pa_prop = []
@@ -409,8 +409,8 @@ for x in range(COLS):
 
 fig.update_layout(layout)
 
-fig.show()
+fig.write_image("outputs/choro.png")
 ```
 
-![](C:\\Users\Perry\Downloads\choro.png)
+![](outputs/py_choro.png)
 

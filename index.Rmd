@@ -12,7 +12,7 @@ title: "Zhiyu's Data Visualization Portfolio"
 zhiyu.lin18@gmail.com
 zl281@georgetown.edu
 
-![](profile_pic.JPG)
+![](profile_pic.JPG){width=250px}
 
 Hello, welcome to my data visualization portfolio. 
 
